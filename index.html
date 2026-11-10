@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autism Game Studio</title>
+<meta name="description" content="Autism Game Studio — независимая студия весёлых и глупых игр для ПК и телефонов.">
+<link rel="icon" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000;
+    --card: #0f0f10;
+    --card-2: #17171a;
+    --line: #26262b;
+    --text: #f2f2f2;
+    --muted: #9a9aa3;
+    --accent: #f5c542;
+    --tg: #2aa3e0;
+    --yt: #ff3d3d;
+    --boosty: #f15f2c;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Rubik", system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; }
+  .wrap { width: 100%; max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+  /* язык */
+  .lang {
+    position: fixed; top: 14px; right: 14px; z-index: 20;
+    display: flex; border: 1px solid var(--line); border-radius: 999px;
+    background: rgba(15,15,16,.85); backdrop-filter: blur(6px); overflow: hidden;
+  }
+  .lang button {
+    background: none; border: 0; color: var(--muted); cursor: pointer;
+    font: 500 13px "Rubik", sans-serif; padding: 6px 12px; letter-spacing: .04em;
+  }
+  .lang button.on { background: var(--text); color: #000; }
+
+  /* шапка */
+  header { text-align: center; padding: 56px 0 24px; }
+  header img { width: min(320px, 72vw); margin: 0 auto; }
+  header p { color: var(--muted); margin: 8px 0 0; font-size: 17px; }
+  nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+  nav a {
+    text-decoration: none; color: var(--muted); font-size: 15px;
+    padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px;
+  }
+  nav a:hover { color: var(--text); border-color: var(--muted); }
+
+  section { padding: 48px 0; }
+  h2 {
+    font-weight: 900; font-size: clamp(28px, 5vw, 40px); text-transform: uppercase;
+    text-align: center; margin: 0 0 32px; letter-spacing: .02em;
+  }
+  h3.cat {
+    font-size: 20px; font-weight: 700; margin: 0 0 16px; color: var(--muted);
+    display: flex; align-items: center; gap: 12px;
+  }
+  h3.cat::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .cat-block + .cat-block { margin-top: 44px; }
+
+  /* карточки игр */
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .game {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .game.wide { grid-column: 1 / -1; }
+  .cover { position: relative; aspect-ratio: 16 / 9; background: #111 center / cover no-repeat; }
+  .cover img.title { position: absolute; inset: 0; margin: auto; width: 78%; filter: drop-shadow(0 6px 12px rgba(0,0,0,.35)); }
+  .game-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .game-body h4 { margin: 0; font-size: 24px; font-weight: 900; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line); color: var(--muted); }
+  .tag b { color: var(--text); font-weight: 500; }
+  .game-body p { margin: 0; color: #d6d6da; }
+  .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .shots button { padding: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; cursor: zoom-in; background: none; }
+  .shots img { aspect-ratio: 16 / 9; object-fit: cover; width: 100%; transition: transform .2s; }
+  .shots button:hover img { transform: scale(1.05); }
+  .btn {
+    align-self: flex-start; display: inline-flex; align-items: center; gap: 8px;
+    background: var(--text); color: #000; text-decoration: none; font-weight: 700;
+    padding: 12px 20px; border-radius: 10px; margin-top: 4px;
+  }
+  .btn:hover { background: var(--accent); }
+
+  .game.secret { justify-content: center; align-items: center; text-align: center; min-height: 260px; padding: 32px 20px; border-style: dashed; }
+  .secret .q { font-size: 72px; font-weight: 900; line-height: 1; color: #2c2c32; }
+  .secret h4 { margin: 12px 0 4px; font-size: 22px; font-weight: 900; letter-spacing: .1em; }
+  .secret p { margin: 0; color: var(--muted); }
+
+  /* о нас */
+  .about { max-width: 720px; margin: 0 auto; font-size: 17px; }
+  .about p { margin: 0 0 16px; color: #d6d6da; }
+  .about .lead { font-size: 22px; font-weight: 700; color: var(--text); }
+  .pillars { list-style: none; padding: 0; margin: 8px 0 24px; display: grid; gap: 10px; }
+  .pillars li { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px 12px 44px; position: relative; }
+  .pillars li::before { content: "★"; position: absolute; left: 16px; color: var(--accent); }
+
+  /* контакты */
+  footer { border-top: 1px solid var(--line); padding: 48px 0 32px; text-align: center; }
+  .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+  .links a {
+    display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 500;
+    padding: 12px 20px; border-radius: 12px; background: var(--card); border: 1px solid var(--line);
+  }
+  .links a:hover { border-color: currentColor; }
+  .links svg { width: 22px; height: 22px; }
+  .links .tg { color: var(--tg); } .links .yt { color: var(--yt); } .links .boosty { color: var(--boosty); }
+  .links span { color: var(--text); }
+  .copy { color: #5d5d66; font-size: 14px; }
+
+  /* просмотр скриншотов */
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: none; align-items: center; justify-content: center; z-index: 50; padding: 16px; cursor: zoom-out; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-height: 90vh; border-radius: 10px; }
+
+  @media (min-width: 820px) {
+    .game.wide { display: grid; grid-template-columns: 1.15fr 1fr; }
+    .game.wide .cover { aspect-ratio: auto; min-height: 100%; }
+  }
+  @media (max-width: 520px) {
+    header { padding-top: 60px; }
+    .game-body { padding: 18px 16px 20px; }
+    .btn { align-self: stretch; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="lang" role="group" aria-label="Language">
+  <button type="button" data-lang="ru">RU</button>
+  <button type="button" data-lang="en">ENG</button>
+</div>
+
+<header class="wrap">
+  <img src="images/logo.png" alt="Autism Game Studio">
+  <p data-i18n="tagline">Независимая студия очень глупых игр</p>
+  <nav>
+    <a href="#games" data-i18n="navGames">Игры</a>
+    <a href="#about" data-i18n="navAbout">О нас</a>
+    <a href="#contacts" data-i18n="navContacts">Контакты</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section id="games">
+    <h2 data-i18n="gamesTitle">Наши игры</h2>
+
+    <div class="cat-block">
+      <h3 class="cat" data-i18n="catGames">Игры</h3>
+      <div class="grid">
+        <article class="game wide">
+          <div class="cover" style="background-image:url(images/mishka-bg.jpg)">
+            <img class="title" src="images/mishka-title.png" alt="Приключение Мишки">
+          </div>
+          <div class="game-body">
+            <h4 data-i18n="mishkaName">Приключение Мишки</h4>
+            <div class="tags">
+              <span class="tag"><span data-i18n="genre">Жанр</span>: <b data-i18n="mishkaGenre">платформер</b></span>
+              <span class="tag"><span data-i18n="platforms">Платформы</span>: <b data-i18n="mishkaPlatforms">ПК (Windows), Android</b></span>
+            </div>
+            <p data-i18n="mishkaDesc">Убогий платформер со смешным сюжетом: жёлтый круг Олег украл киску синего квадрата Миши. Сможете ли вы вернуть Мише его киску?</p>
+            <div class="shots">
+              <button type="button"><img src="images/shot-1.jpg" alt="" loading="lazy"></button>
+              <button type="button"><img src="images/shot-2.jpg" alt="" loading="lazy"></button>
+              <button type="button"><img src="images/shot-3.jpg" alt="" loading="lazy"></button>
+            </div>
+            <a class="btn" href="https://t.me/autismgame/6" target="_blank" rel="noopener">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6 11l6 6 6-6M4 21h16"/></svg>
+              <span data-i18n="download">Скачать в Telegram</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="game secret">
+          <div class="q">?</div>
+          <h4 data-i18n="secret">СЕКРЕТ</h4>
+          <p data-i18n="soon">Скоро будет…</p>
+        </article>
+      </div>
+    </div>
+
+    <div class="cat-block">
+      <h3 class="cat" data-i18n="catRoblox">Игры в Roblox</h3>
+      <div class="grid">
+        <article class="game secret">
+          <div class="q">?</div>
+          <h4 data-i18n="secret">СЕКРЕТ</h4>
+          <p data-i18n="soon">Скоро будет…</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2 data-i18n="aboutTitle">Кто мы такие</h2>
+    <div class="about">
+      <p class="lead" data-i18n="about1">Мы — Autism Game Studio!</p>
+      <p data-i18n="about2">Независимая студия, которая делает настолько глупые проекты, что их не пропускает Play Market. Наши главные принципы как разработчиков:</p>
+      <ul class="pillars">
+        <li data-i18n="p1">Весёлые и разнообразные игры</li>
+        <li data-i18n="p2">Совершенствование от игры к игре</li>
+        <li data-i18n="p3">Регулярный выпуск контента: и игр, и видео о них</li>
+        <li data-i18n="p4">Выпуск игр и на ПК, и на телефоны</li>
+      </ul>
+      <p data-i18n="about3">Хоть студия и состоит из одного человека, мы будем гордо зваться Autism Game Studio, ведь так это выглядит в сто раз серьёзнее 😏</p>
+      <p data-i18n="about4">На самом деле я давно мечтал разрабатывать игры, и теперь у меня есть собственный своеобразный бренд, который я хочу развить так далеко, как только возможно, вкладывая в него душу и своё время.</p>
+      <p data-i18n="about5">Поэтому никакое авторское право не остановит меня на пути к созданию шедевроигр &gt;:3</p>
+    </div>
+  </section>
+</main>
+
+<footer id="contacts">
+  <div class="wrap">
+    <h2 data-i18n="contactsTitle">Контакты</h2>
+    <div class="links">
+      <a class="tg" href="https://t.me/autismgame" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13.3 1.8 11.8c-1-.3-1-1 .2-1.5L20.6 3.2c.9-.3 1.6.2 1.3 1.1z"/></svg>
+        <span data-i18n="tg">Telegram-канал</span>
+      </a>
+      <a class="yt" href="https://youtube.com/@oneeggsoneeggs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.7 15.1V8.9L15.5 12l-5.8 3.1z"/></svg>
+        <span data-i18n="yt">YouTube</span>
+      </a>
+      <a class="boosty" href="https://boosty.to/oneeggforsaken" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h7l-2 8 9-12h-7l2-8z"/></svg>
+        <span data-i18n="boosty">Boosty</span>
+      </a>
+    </div>
+    <p class="copy">© <span id="year"></span> Autism Game Studio</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox"><img alt=""></div>
+
+<script>
+  const T = {
+    ru: {
+      tagline: 'Независимая студия очень глупых игр',
+      navGames: 'Игры', navAbout: 'О нас', navContacts: 'Контакты',
+      gamesTitle: 'Наши игры', catGames: 'Игры', catRoblox: 'Игры в Roblox',
+      mishkaName: 'Приключение Мишки', genre: 'Жанр', platforms: 'Платформы',
+      mishkaGenre: 'платформер', mishkaPlatforms: 'ПК (Windows), Android',
+      mishkaDesc: 'Убогий платформер со смешным сюжетом: жёлтый круг Олег украл киску синего квадрата Миши. Сможете ли вы вернуть Мише его киску?',
+      download: 'Скачать в Telegram', secret: 'СЕКРЕТ', soon: 'Скоро будет…',
+      aboutTitle: 'Кто мы такие',
+      about1: 'Мы — Autism Game Studio!',
+      about2: 'Независимая студия, которая делает настолько глупые проекты, что их не пропускает Play Market. Наши главные принципы как разработчиков:',
+      p1: 'Весёлые и разнообразные игры',
+      p2: 'Совершенствование от игры к игре',
+      p3: 'Регулярный выпуск контента: и игр, и видео о них',
+      p4: 'Выпуск игр и на ПК, и на телефоны',
+      about3: 'Хоть студия и состоит из одного человека, мы будем гордо зваться Autism Game Studio, ведь так это выглядит в сто раз серьёзнее 😏',
+      about4: 'На самом деле я давно мечтал разрабатывать игры, и теперь у меня есть собственный своеобразный бренд, который я хочу развить так далеко, как только возможно, вкладывая в него душу и своё время.',
+      about5: 'Поэтому никакое авторское право не остановит меня на пути к созданию шедевроигр >:3',
+      contactsTitle: 'Контакты', tg: 'Telegram-канал', yt: 'YouTube', boosty: 'Boosty'
+    },
+    en: {
+      tagline: 'An indie studio of very silly games',
+      navGames: 'Games', navAbout: 'About', navContacts: 'Contacts',
+      gamesTitle: 'Our games', catGames: 'Games', catRoblox: 'Roblox games',
+      mishkaName: "Mishka's Adventure", genre: 'Genre', platforms: 'Platforms',
+      mishkaGenre: 'platformer', mishkaPlatforms: 'PC (Windows), Android',
+      mishkaDesc: "A janky platformer with a hilarious story: Oleg the yellow circle stole the kitty of Misha the blue square. Can you get Misha's kitty back?",
+      download: 'Download on Telegram', secret: 'SECRET', soon: 'Coming soon…',
+      aboutTitle: 'Who we are',
+      about1: "We're Autism Game Studio!",
+      about2: "An independent studio making projects so dumb that Play Market won't let them in. Our core pillars as developers:",
+      p1: 'Fun and varied games',
+      p2: 'Getting better with every game',
+      p3: 'Regular content: both games and videos about them',
+      p4: 'Releasing games on both PC and phones',
+      about3: "Even though the studio is just one person, we'll proudly call ourselves Autism Game Studio, because it looks a hundred times more serious 😏",
+      about4: "Honestly, I've dreamed of making games for a long time, and now I have my own quirky brand that I want to grow as far as I possibly can, putting my soul and my time into it.",
+      about5: 'So no copyright will stop me on the way to making masterpiece games >:3',
+      contactsTitle: 'Contacts', tg: 'Telegram channel', yt: 'YouTube', boosty: 'Boosty'
+    }
+  };
+
+  function setLang(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = T[lang][el.dataset.i18n]; });
+    document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+    document.querySelector('.cover img.title').alt = T[lang].mishkaName;
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+  }
+
+  let saved = null;
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  setLang(saved || (navigator.language.startsWith('ru') ? 'ru' : 'en'));
+  document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+
+  const box = document.getElementById('lightbox');
+  document.querySelectorAll('.shots button').forEach(b => b.addEventListener('click', () => {
+    box.querySelector('img').src = b.querySelector('img').src;
+    box.classList.add('open');
+  }));
+  box.addEventListener('click', () => box.classList.remove('open'));
+  addEventListener('keydown', e => { if (e.key === 'Escape') box.classList.remove('open'); });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
